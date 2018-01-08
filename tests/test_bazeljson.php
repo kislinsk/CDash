@@ -30,7 +30,8 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed
+                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
@@ -38,7 +39,9 @@ class BazelJSONTestCase extends KWWebTestCase
             'builderrors' => 1,
             'buildwarnings' => 2,
             'testfailed' => 1,
-            'testpassed' => 1
+            'testpassed' => 1,
+            'configureerrors' => 0,
+            'configurewarnings' => 0
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -273,6 +276,42 @@ class BazelJSONTestCase extends KWWebTestCase
         $expected = "TIMEOUT";
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
+        }
+
+        // Cleanup.
+        remove_build($buildid);
+    }
+
+    public function testBazelConfigure()
+    {
+        // Submit testing data.
+        $buildid = $this->submit_data('InsightExample', 'BazelJSON',
+            'e6ede8b5aed31fd65b3774373c8e8c1b',
+            dirname(__FILE__) . '/data/Bazel/bazel_configure.json');
+        if (!$buildid) {
+            return false;
+        }
+
+        // Validate the build.
+        $stmt = $this->PDO->query(
+                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                configureerrors, configurewarnings
+                FROM build WHERE id = $buildid");
+        $row = $stmt->fetch();
+
+        $answer_key = [
+            'builderrors' => 0,
+            'buildwarnings' => 0,
+            'testfailed' => 0,
+            'testpassed' => 2391,
+            'configureerrors' => 1,
+            'configurewarnings' => 700
+        ];
+        foreach ($answer_key as $key => $expected) {
+            $found = $row[$key];
+            if ($found != $expected) {
+                $this->fail("Expected $expected for $key but found $found");
+            }
         }
 
         // Cleanup.
