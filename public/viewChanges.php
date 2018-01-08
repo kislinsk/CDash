@@ -41,7 +41,7 @@ function get_related_dates($projectname, $basedate)
     if (pdo_num_rows($dbQuery) > 0) {
         $project = pdo_fetch_array($dbQuery);
         $nightlytime = $project['nightlytime'];
-        //echo "query result nightlytime: " . $nightlytime . "<br/>";
+    //echo "query result nightlytime: " . $nightlytime . "<br/>";
     } else {
         $nightlytime = '00:00:00';
         //echo "default nightlytime: " . $nightlytime . "<br/>";
