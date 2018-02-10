@@ -2716,6 +2716,11 @@ class Build
         return $this->TestCollection;
     }
 
+    public function GetSummaryUrl()
+    {
+        // TODO: create method
+    }
+
     /**
      * @return BuildConfigure
      */

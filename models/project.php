@@ -1621,4 +1621,9 @@ class Project
                 LOG_INFO, $this->Id);
         return true;
     }
+
+    public function GetProjectSubscribers()
+    {
+        // TODO: create method
+    }
 }
