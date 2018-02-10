@@ -95,6 +95,7 @@ class Build
     private $Failures;
     private $PDO;
     private $Site;
+    private $Project;
     private $BuildConfigure;
 
     public function __construct()
@@ -2733,5 +2734,24 @@ class Build
     public function SetBuildConfigure(BuildConfigure $buildConfigure)
     {
         $this->BuildConfigure = $buildConfigure;
+    }
+
+    /**
+     * @return Project
+     */
+    public function GetProject()
+    {
+        if (!$this->Project) {
+            $this->Project = new Project();
+        }
+        return $this->Project;
+    }
+
+    /**
+     * @param Project $project
+     */
+    public function SetProject(Project $project)
+    {
+        $this->Project = $project;
     }
 }
