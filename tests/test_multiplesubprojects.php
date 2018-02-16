@@ -133,8 +133,10 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
     private function restoreState()
     {
         // Delete the builds
-        foreach ($this->buildIds as $buildid) {
-            remove_build($buildid);
+        if ($this->buildIds) {
+            foreach ($this->buildIds as $buildid) {
+                remove_build($buildid);
+            }
         }
 
         $this->restoreEmailPreference();
@@ -588,6 +590,40 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             }
         }
 
+        // Adding tests to ensure that labels associated with subprojects and tests were saved
+        foreach ($builds as $build) {
+            $sql = "
+                SELECT `label`.`text`
+                FROM `label2test`
+                JOIN `label`
+                ON
+                    `label`.`id`=`label2test`.`labelid`
+                WHERE `label2test`.`buildid`=:buildid;
+            ";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':buildid', $build['id'], PDO::PARAM_INT);
+            $stmt->execute();
+            $rows = array_unique($stmt->fetchAll(PDO::FETCH_COLUMN, 'text'));
+
+            switch ($build['label']) {
+                case 'MyExperimentalFeature':
+                    $success = count($rows) === 1 && in_array('MyExperimentalFeature', $rows);
+                    break;
+                case 'MyProductionCode':
+                    $success = count($rows) === 1 && in_array('MyProductionCode', $rows);
+                    break;
+                case 'MyThirdPartyDependency':
+                    $success = count($rows) === 1 && in_array('MyThirdPartyDependency1', $rows);
+                    break;
+                case 'EmptySubproject':
+                    $success = count($rows) === 0;
+                    break;
+            }
+            if (!$success) {
+                $error_message = 'Unexpected label associations';
+                break;
+            }
+        }
         if ($success) {
             $this->pass('Test passed');
             return 0;

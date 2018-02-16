@@ -197,7 +197,8 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (!empty($this->TestSubProjectName)) {
                 $this->SubProjectName = $this->TestSubProjectName;
-            } elseif (isset($this->Test)) {
+            }
+            if (isset($this->Test)) {
                 $this->Test->AddLabel($this->Label);
             }
         } elseif ($name == 'NAMEDMEASUREMENT') {
@@ -322,7 +323,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                     break;
                 }
             }
-            if (empty($this->TestSubProjectName)) {
+            if (is_a($this->Label, Label::class)) {
                 $this->Label->SetText($data);
             }
         }
