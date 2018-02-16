@@ -252,6 +252,8 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 $build->UpdateTestNumbers($this->NumberTestsPassed[$subproject],
                     $this->NumberTestsFailed[$subproject],
                     $this->NumberTestsNotRun[$subproject]);
+
+                // Is it really necessary to have to load the build from the db here?
                 $build->ComputeTestTiming();
 
                 if ($this->StartTimeStamp > 0 && $this->EndTimeStamp > 0) {
@@ -402,7 +404,11 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
     public function GetBuildCollection()
     {
-        return new BuildCollection($this->Builds);
+        $collection = new BuildCollection();
+        foreach ($this->Builds as $key => $build) {
+            $collection->addItem($build, $key);
+        }
+        return $collection;
     }
 
     public function getProjectId()

@@ -17,6 +17,9 @@ class ServiceContainer extends Singleton
         $this->container = $builder->build();
     }
 
+    /**
+     * @return Container
+     */
     public function getContainer()
     {
         return $this->container;

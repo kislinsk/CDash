@@ -22,6 +22,8 @@ include_once 'models/buildgroupposition.php';
 require_once 'models/user.php';
 require_once 'include/cdashmail.php';
 
+use CDash\Collection\SubscriberCollection;
+
 /** Main project class */
 class Project
 {
@@ -66,6 +68,11 @@ class Project
     public $CTestTemplateScript;
     public $WebApiKey;
     private $PDO;
+
+    /**
+     * @var SubscriberCollection
+     */
+    private $SubscriberCollection;
 
     public function __construct()
     {
@@ -1622,8 +1629,20 @@ class Project
         return true;
     }
 
-    public function GetProjectSubscribers()
+    /**
+     * @returns \CDash\Collection\SubscriberCollection
+     */
+    public function GetSubscriberCollection()
     {
-        // TODO: create method
+        if (!$this->SubscriberCollection) {
+            $this->SubscriberCollection = new SubscriberCollection();
+        }
+
+        return $this->SubscriberCollection;
+    }
+
+    public function SetSubscriberCollection(SubscriberCollection $subscribers)
+    {
+        $this->SubscriberCollection = $subscribers;
     }
 }

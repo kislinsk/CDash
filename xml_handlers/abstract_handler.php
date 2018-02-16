@@ -112,4 +112,9 @@ abstract class AbstractHandler implements SaxHandler
         }
         return $this->ModelFactory;
     }
+
+    public function GetProject()
+    {
+        return $this->Project;
+    }
 }

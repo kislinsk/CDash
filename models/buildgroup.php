@@ -18,6 +18,9 @@ include_once 'models/build.php';
 
 class BuildGroup
 {
+    const NIGHTLY = 'Nightly';
+    const EXPERIMENTAL = 'Experimental';
+
     private $Id;
     private $ProjectId;
     private $Name;
