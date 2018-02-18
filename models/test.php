@@ -15,6 +15,7 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
+use CDash\Collection\LabelCollection;
 use CDash\Collection\TestMeasurementCollection;
 
 include_once 'models/testimage.php';
@@ -50,6 +51,7 @@ class Test
     public $Measurements;
 
     private $TestMeasurementCollection;
+    private $LabelCollection;
     private $Status;
     private $BuildTest;
 
@@ -315,7 +317,21 @@ class Test
     }
 
     /**
-     * @return
+     * @return LabelCollection
+     */
+    public function GetLabelCollection()
+    {
+        if (!$this->LabelCollection) {
+            $this->LabelCollection = new LabelCollection();
+            foreach ($this->Labels as $label) {
+                $this->LabelCollection->add($label);
+            }
+        }
+        return $this->LabelCollection;
+    }
+
+    /**
+     * @return double
      */
     public function GetExecutionTime()
     {
@@ -323,16 +339,25 @@ class Test
         return (double)$buildTest->Time;
     }
 
+    /**
+     * @return bool
+     */
     public function HasFailed()
     {
         return $this->GetStatus() === self::FAILED;
     }
 
+    /**
+     * @return bool
+     */
     public function HasNotRun()
     {
         return $this->GetStatus() === self::NOTRUN;
     }
 
+    /**
+     * @return bool
+     */
     public function HasPassed()
     {
         return $this->GetStatus() === self::PASSED;
