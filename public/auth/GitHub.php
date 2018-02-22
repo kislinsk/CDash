@@ -14,12 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-session_name('CDash');
-session_start();
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'auth/GitHubProvider.php';
 
-if (empty($_SESSION['cdash']) || empty($_SESSION['cdash']['csrfToken'])) {
-    echo '';
-    return;
+$provider = new GitHubProvider();
+if (!$provider->Valid) {
+    exit('CDash could not initialize the GitHub OAuth2 provider');
 }
 
-echo $_SESSION['cdash']['csrfToken'];
+$provider->auth();
