@@ -371,7 +371,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         $build->StartTime = gmdate(FMT_DATETIME);
 
         $build->SetSubProject($this->SubProjectName);
-
+        $build->SetActionableType(ActionableTypes::TEST);
         $build->GetIdFromName($this->SubProjectName);
         $build->RemoveIfDone();
 
