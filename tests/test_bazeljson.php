@@ -248,7 +248,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $answer_key = [
             'builderrors' => 0,
             'buildwarnings' => 604,
-            'testfailed' => 94,
+            'testfailed' => 92,
             'testpassed' => 2395
         ];
         foreach ($answer_key as $key => $expected) {
@@ -311,6 +311,39 @@ class BazelJSONTestCase extends KWWebTestCase
             $found = $row[$key];
             if ($found != $expected) {
                 $this->fail("Expected $expected for $key but found $found");
+            }
+        }
+
+        // Cleanup.
+        remove_build($buildid);
+    }
+
+    public function testBazelDuplicateTests()
+    {
+        // Submit testing data.
+        $buildid = $this->submit_data('InsightExample', 'BazelJSON',
+            '4a42c09a1751848dc5b806c4bc701fd6',
+            dirname(__FILE__) . '/data/Bazel/automotive_test.json');
+        if (!$buildid) {
+            return false;
+        }
+
+        // Validate the build.
+        $stmt = $this->PDO->query(
+                "SELECT builderrors, buildwarnings, testfailed, testpassed
+                FROM build WHERE id = $buildid");
+        $row = $stmt->fetch();
+
+        $answer_key = [
+            'builderrors' => 0,
+            'buildwarnings' => 0,
+            'testfailed' => 1,
+            'testpassed' => 0
+        ];
+        foreach ($answer_key as $key => $expected) {
+            $found = $row[$key];
+            if ($found != $expected) {
+                $this->fail("Expected $expected for $key but found $found --> $buildid");
             }
         }
 
