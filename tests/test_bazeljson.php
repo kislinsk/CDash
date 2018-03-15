@@ -36,7 +36,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 1,
+            'builderrors' => 2,
             'buildwarnings' => 2,
             'testfailed' => 1,
             'testpassed' => 1,
@@ -300,7 +300,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 0,
+            'builderrors' => 8,
             'buildwarnings' => 0,
             'testfailed' => 0,
             'testpassed' => 2391,
@@ -343,6 +343,39 @@ class BazelJSONTestCase extends KWWebTestCase
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
             if ($found != $expected) {
+                $this->fail("Expected $expected for $key but found $found");
+            }
+        }
+
+        // Cleanup.
+        remove_build($buildid);
+    }
+
+    public function testBazelCoverageError()
+    {
+        // Submit testing data.
+        $buildid = $this->submit_data('InsightExample', 'BazelJSON',
+            'ed0543b836ab8a9c288022235df63aeb',
+            dirname(__FILE__) . '/data/Bazel/kcov_output.json');
+        if (!$buildid) {
+            return false;
+        }
+
+        // Validate the build.
+        $stmt = $this->PDO->query(
+                "SELECT builderrors, buildwarnings, testfailed, testpassed
+                FROM build WHERE id = $buildid");
+        $row = $stmt->fetch();
+
+        $answer_key = [
+            'builderrors' => 1,
+            'buildwarnings' => 0,
+            'testfailed' => 0,
+            'testpassed' => 0
+        ];
+        foreach ($answer_key as $key => $expected) {
+            $found = $row[$key];
+            if ($found != $expected) {
                 $this->fail("Expected $expected for $key but found $found --> $buildid");
             }
         }
@@ -350,6 +383,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Cleanup.
         remove_build($buildid);
     }
+
 
     private function submit_data($project_name, $upload_type, $md5, $file_path)
     {
