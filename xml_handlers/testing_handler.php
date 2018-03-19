@@ -360,6 +360,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
         $build->SiteId = $this->Site->Id;
         $build->Name = $this->BuildName;
+        $build->SubProjectName = $this->SubProjectName;
         $build->SetStamp($this->BuildStamp);
         $build->Generator = $this->Generator;
         $build->Information = $this->BuildInformation;
