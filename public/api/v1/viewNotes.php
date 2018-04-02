@@ -20,6 +20,7 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 
 use CDash\Model\Build;
+
 $start = microtime_float();
 $build = get_request_build();
 $buildid = get_request_build_id();

@@ -7,7 +7,6 @@ use CDash\Model\ClientJobSchedule;
 /** Add a new build */
 function add_build($build, $clientscheduleid = 0)
 {
-
     if (!is_numeric($build->ProjectId) || !is_numeric($build->SiteId)) {
         return;
     }
@@ -35,7 +34,6 @@ function add_build($build, $clientscheduleid = 0)
 
     // If the build is part of a subproject we link the update file
     if (isset($build->SubProjectName) && $build->SubProjectName != '') {
-
         $BuildUpdate = new BuildUpdate();
         $BuildUpdate->BuildId = $build->Id;
         $BuildUpdate->AssociateBuild($build->SiteId, $build->Name, $build->GetStamp());

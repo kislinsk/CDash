@@ -24,6 +24,7 @@ require_once 'include/api_common.php';
 require_once 'include/version.php';
 
 use CDash\Model\BuildGroup;
+
 // Require administrative access to view this page.
 init_api_request();
 $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);

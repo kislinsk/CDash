@@ -14,7 +14,6 @@
 
 namespace CDash\Model;
 
-
 class Object
 {
     const PROJECT = 1;

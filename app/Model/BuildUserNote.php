@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-
 use CDash\Database;
 
 class BuildUserNote

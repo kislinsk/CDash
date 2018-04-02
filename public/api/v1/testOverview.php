@@ -21,6 +21,7 @@ require_once 'include/filterdataFunctions.php';
 require_once 'include/version.php';
 
 use CDash\Model\Project;
+
 $start = microtime_float();
 $response = array();
 

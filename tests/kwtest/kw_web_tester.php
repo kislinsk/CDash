@@ -17,6 +17,7 @@
 require_once dirname(__FILE__) . '/kw_unlink.php';
 
 use CDash\Model\Project;
+
 /**#@+
  *  include other SimpleTest class files
  */

@@ -37,8 +37,3 @@ define('CDASH_OBJECT_TEST', '5');
 define('CDASH_OBJECT_COVERAGE', '6');
 define('CDASH_OBJECT_DYNAMICANALYSIS', '7');
 define('CDASH_OBJECT_USER', '8');
-
-class Job
-{
-
-}

@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-
 /** Test Measurement */
 class TestMeasurement
 {

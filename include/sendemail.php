@@ -28,7 +28,6 @@ use CDash\Model\Site;
 use CDash\Model\User;
 use CDash\Model\UserProject;
 
-
 /** Check the email preferences for errors */
 function checkEmailPreferences($emailcategory, $errors, $fixes = false)
 {
@@ -205,7 +204,6 @@ function check_email_update_errors($buildid)
 /** Return the list of user id and committer emails who should get emails */
 function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes = false, $collectUnregisteredCommitters = false)
 {
-
     $userids = array();
     $committeremails = array();
 

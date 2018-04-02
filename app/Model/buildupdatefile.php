@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-
 class BuildUpdateFile
 {
     public $Filename;

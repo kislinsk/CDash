@@ -14,7 +14,6 @@
 
 namespace CDash\Model;
 
-
 class Repository
 {
     const CVS = 0;

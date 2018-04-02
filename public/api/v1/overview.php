@@ -15,6 +15,7 @@ include 'include/version.php';
 require_once 'include/memcache_functions.php';
 
 use CDash\Model\Project;
+
 // handle required project argument
 @$projectname = $_GET['project'];
 if (!isset($projectname)) {
