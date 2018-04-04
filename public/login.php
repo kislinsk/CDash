@@ -34,8 +34,8 @@ $session_OK = 0;
 $service = ServiceContainer::getInstance();
 /** @var Session $session */
 $session = $service->get(Session::class);
-$cache_policy = isset($SessionCachePolicy) ? $SessionCachePolicy : Session::CACHE_PRIVATE_NO_EXPIRE;
-if (!auth($cache_policy) && !@$noforcelogin) {
+
+if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     // authentication failed
 
     $csrfToken = null;
