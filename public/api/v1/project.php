@@ -23,6 +23,7 @@ require_once 'include/version.php';
 
 use CDash\Model\Project;
 use CDash\Model\User;
+use CDash\Model\UserProject;
 
 $userid = null;
 
@@ -118,13 +119,17 @@ function rest_post()
 /* Handle GET requests */
 function rest_get()
 {
-    $response = array();
+    global $userid;
+    $User = new User();
+    $User->Id = $userid;
+
+    $response = [];
     $Project = get_project($response);
     if (!$Project) {
         echo json_encode($response);
         return;
     }
-    $response['project'] = $Project->ConvertToJSON();
+    $response['project'] = $Project->ConvertToJSON($User);
     echo json_encode($response);
     http_response_code(200);
 }
@@ -212,21 +217,6 @@ function valid_user(&$response, $Project=null)
     return true;
 }
 
-/** Strip the HTTP */
-function stripHTTP($url)
-{
-    $pos = strpos($url, 'http://');
-    if ($pos !== false) {
-        return substr($url, 7);
-    } else {
-        $pos = strpos($url, 'https://');
-        if ($pos !== false) {
-            return substr($url, 8);
-        }
-    }
-    return $url;
-}
-
 function create_project(&$response)
 {
     $Name = $_REQUEST['project']['Name'];
@@ -248,6 +238,9 @@ function create_project(&$response)
 
     // Add the current user to this project.
     global $userid;
+    $User = new User();
+    $User->Id = $userid;
+
     if ($userid != 1) {
         // Global admin is already added, so no need to do it again.
         $UserProject = new UserProject();
@@ -259,16 +252,20 @@ function create_project(&$response)
     }
 
     $response['projectcreated'] = 1;
-    $response['project'] = $Project->ConvertToJSON();
+    $response['project'] = $Project->ConvertToJSON($User);
     http_response_code(200);
 }
 
 function update_project(&$response, $Project)
 {
+    global $userid;
+    $User = new User();
+    $User->Id = $userid;
+
     $Project->Fill();
     populate_project($Project);
     $response['projectupdated'] = 1;
-    $response['project'] = $Project->ConvertToJSON();
+    $response['project'] = $Project->ConvertToJSON($User);
     http_response_code(200);
 }
 
