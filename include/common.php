@@ -2250,18 +2250,3 @@ function extract_tar($filename, $dirName)
         return extract_tar_archive_tar($filename, $dirName);
     }
 }
-
-/** Strip the HTTP */
-function stripHTTP($url)
-{
-    $pos = strpos($url, 'http://');
-    if ($pos !== false) {
-        return substr($url, 7);
-    } else {
-        $pos = strpos($url, 'https://');
-        if ($pos !== false) {
-            return substr($url, 8);
-        }
-    }
-    return $url;
-}

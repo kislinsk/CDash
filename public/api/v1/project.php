@@ -276,12 +276,6 @@ function populate_project($Project)
         $Project->{$k} = $v;
     }
 
-    // Strip "http[s]://" from the beginning of URLs.
-    $url_vars = array('HomeUrl', 'CvsUrl', 'DocumentationUrl', 'TestingDataUrl');
-    foreach ($url_vars as $var) {
-        $Project->{$var} = stripHTTP($Project->{$var});
-    }
-
     // Convert UploadQuota from GB to bytes.
     global $CDASH_MAX_UPLOAD_QUOTA;
     if (is_numeric($Project->UploadQuota) && $Project->UploadQuota > 0) {
