@@ -264,6 +264,8 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 function ctest_parse($filehandler, $projectid, $buildid = null,
                      $expected_md5 = '', $do_checksum = true, $scheduleid = 0)
 {
+    log('START', 'ctest_parse', LOG_DEBUG);
+
     require_once 'include/common.php';
     include 'include/version.php';
 
@@ -493,6 +495,9 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     }
     displayReturnStatus($statusarray);
     $handler->backupFileName = $backup_filename;
+
+    log('END', 'ctest_parse', LOG_DEBUG);
+
     return $handler;
 }
 
