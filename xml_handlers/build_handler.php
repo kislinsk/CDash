@@ -66,7 +66,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
-
+        add_log($name, 'BuildHandler::startElement', LOG_DEBUG);
         if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
@@ -112,7 +112,9 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
             }
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
+            add_log('SubProjectName: '. $this->SubProjectName, 'BuildHandler::startElement', LOG_DEBUG);
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
+                add_log('Create SubProjects entry', 'BuildHandler::startElement', LOG_DEBUG);
                 $this->SubProjects[$this->SubProjectName] = array();
             }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
@@ -125,6 +127,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
+                add_log('Create Builds entry', 'BuildHandler::startElement', LOG_DEBUG);
                 $this->Builds[$this->SubProjectName] = $build;
             }
         } elseif ($name == 'BUILD') {
@@ -139,26 +142,33 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
+                add_log('Create Builds entry (no subproject)', 'BuildHandler::startElement', LOG_DEBUG);
                 $this->Builds[''] = $build;
             }
         } elseif ($name == 'WARNING') {
+            add_log('Found warning', 'BuildHandler::startElement', LOG_DEBUG);
             $this->Error = new BuildError();
             $this->Error->Type = 1;
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'ERROR') {
+            add_log('Found error', 'BuildHandler::startElement', LOG_DEBUG);
             $this->Error = new BuildError();
             $this->Error->Type = 0;
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'FAILURE') {
+            add_log('Found failure', 'BuildHandler::startElement', LOG_DEBUG);
             $this->Error = new BuildFailure();
             $this->Error->Type = 0;
             if ($attributes['TYPE'] == 'Error') {
+                add_log('Failure type: error', 'BuildHandler::startElement', LOG_DEBUG);
                 $this->Error->Type = 0;
             } elseif ($attributes['TYPE'] == 'Warning') {
+                add_log('Failure type: warning', 'BuildHandler::startElement', LOG_DEBUG);
                 $this->Error->Type = 1;
             }
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'LABEL') {
+            add_log('Create label', 'BuildHandler::startElement', LOG_DEBUG);
             $this->Label = new Label();
         }
     }
@@ -257,6 +267,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 }
             }
             if (array_key_exists($this->SubProjectName, $this->Builds)) {
+                add_log('Add error to build for subproject ' . $this->SubProjectName, 'BuildHandler::endElement', LOG_DEBUG);
                 $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);
