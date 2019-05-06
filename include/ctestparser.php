@@ -264,7 +264,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 function ctest_parse($filehandler, $projectid, $buildid = null,
                      $expected_md5 = '', $do_checksum = true, $scheduleid = 0)
 {
-    log('START', 'ctest_parse', LOG_DEBUG);
+    add_log('START', 'ctest_parse', LOG_DEBUG);
 
     require_once 'include/common.php';
     include 'include/version.php';
@@ -281,6 +281,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     try {
         $handler = parse_put_submission($filehandler, $projectid, $expected_md5);
         if ($handler) {
+            add_log('New style PUT submission', 'ctest_parse', LOG_DEBUG);
             return $handler;
         }
     } catch (CDashParseException $e) {
@@ -295,48 +296,60 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 
     if (preg_match('/<Update/', $content)) {
         // Should be first otherwise confused with Build
-
+        add_log('Create UpdateHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new UpdateHandler($projectid, $scheduleid);
         $file = 'Update';
     } elseif (preg_match('/<Build/', $content)) {
+        add_log('Create BuildHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new BuildHandler($projectid, $scheduleid);
         $file = 'Build';
     } elseif (preg_match('/<Configure/', $content)) {
+        add_log('Create ConfigureHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new ConfigureHandler($projectid, $scheduleid);
         $file = 'Configure';
     } elseif (preg_match('/<Testing/', $content)) {
+        add_log('Create TestingHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new TestingHandler($projectid, $scheduleid);
         $file = 'Test';
     } elseif (preg_match('/<CoverageLog/', $content)) {
         // Should be before coverage
-
+        add_log('Create CoverageLogHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new CoverageLogHandler($projectid, $scheduleid);
         $file = 'CoverageLog';
     } elseif (preg_match('/<Coverage/', $content)) {
+        add_log('Create CoverageHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new CoverageHandler($projectid, $scheduleid);
         $file = 'Coverage';
     } elseif (preg_match('/<report/', $content)) {
+        add_log('Create CoverageJUnitHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new CoverageJUnitHandler($projectid, $scheduleid);
         $file = 'Coverage';
     } elseif (preg_match('/<Notes/', $content)) {
+        add_log('Create NoteHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new NoteHandler($projectid, $scheduleid);
         $file = 'Notes';
     } elseif (preg_match('/<DynamicAnalysis/', $content)) {
+        add_log('Create DynamicAnalysisHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new DynamicAnalysisHandler($projectid, $scheduleid);
         $file = 'DynamicAnalysis';
     } elseif (preg_match('/<Project/', $content)) {
+        add_log('Create ProjectHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new ProjectHandler($projectid, $scheduleid);
         $file = 'Project';
     } elseif (preg_match('/<Upload/', $content)) {
+        add_log('Create UploadHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new UploadHandler($projectid, $scheduleid);
         $file = 'Upload';
     } elseif (preg_match('/<test-results/', $content)) {
+        add_log('Create TestingNUnitHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new TestingNUnitHandler($projectid, $scheduleid);
         $file = 'Test';
     } elseif (preg_match('/<testsuite/', $content)) {
+        add_log('Create TestingJUnitHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new TestingJUnitHandler($projectid, $scheduleid);
         $file = 'Test';
     } elseif (preg_match('/<Done/', $content)) {
+        add_log('Create DoneHandler', 'ctest_parse', LOG_DEBUG);
         $handler = new DoneHandler($projectid, $scheduleid);
         $file = 'Done';
     }
@@ -496,7 +509,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     displayReturnStatus($statusarray);
     $handler->backupFileName = $backup_filename;
 
-    log('END', 'ctest_parse', LOG_DEBUG);
+    add_log('END', 'ctest_parse', LOG_DEBUG);
 
     return $handler;
 }

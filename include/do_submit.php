@@ -123,7 +123,6 @@ function curl_request($request)
 function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
                    $expected_md5 = '', $do_checksum = true, $submission_id = 0)
 {
-    log('Hello, world!', 'do_submit', LOG_ERR);
     $config = Config::getInstance();
     $filehandle = getSubmissionFileHandle($fileHandleOrSubmissionId);
 
