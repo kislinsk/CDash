@@ -279,7 +279,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     try {
         $handler = parse_put_submission($filehandler, $projectid, $expected_md5);
         if ($handler) {
-            add_log('New style PUT submission', 'ctest_parse', LOG_DEBUG);
             return $handler;
         }
     } catch (CDashParseException $e) {
@@ -390,11 +389,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     }
 
     // Check if the build is in the block list
-    add_log('SELECT id FROM blockbuild WHERE projectid=' . qnum($projectid) . "
-            AND (buildname='' OR buildname='" . $buildname . "')
-            AND (sitename='' OR sitename='" . $sitename . "')
-            AND (ipaddress='' OR ipaddress='" . $ip . "')",
-            'ctest_parse', LOG_DEBUG);
     $query = pdo_query('SELECT id FROM blockbuild WHERE projectid=' . qnum($projectid) . "
             AND (buildname='' OR buildname='" . $buildname . "')
             AND (sitename='' OR sitename='" . $sitename . "')
@@ -420,7 +414,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         if ($filename === false) {
             return $handler;
         }
-        add_log('backup_filename: ' . $backup_filename, 'ctest_parse', LOG_DEBUG);
     }
 
     $statusarray = [];

@@ -36,23 +36,29 @@ class DoneHandler extends AbstractHandler
 
     public function startElement($parser, $name, $attributes)
     {
+        add_log($name, 'DoneHandler::startElement', LOG_DEBUG);
         parent::startElement($parser, $name, $attributes);
         if ($name == 'DONE' && array_key_exists('RETRIES', $attributes) &&
                 $attributes['RETRIES'] > 4) {
             // Too many retries, stop trying to parse this file.
+            add_log('Too many retries, stop trying to parse this file.', 'BuildHandler::startElement', LOG_DEBUG);
             $this->FinalAttempt = true;
         }
     }
 
     public function endElement($parser, $name)
     {
+        add_log($name, 'DoneHandler::endElement', LOG_DEBUG);
         parent::endElement($parser, $name);
         if ($name == 'DONE') {
             // Check pending submissions and requeue this file if necessary.
+            add_log('Check pending submissions and requeue this file if necessary.', 'DoneHandler::endElement', LOG_DEBUG);
             $this->PendingSubmissions->Build = $this->Build;
             if ($this->PendingSubmissions->GetNumFiles() > 1) {
+                add_log('There are still pending submissions.', 'DoneHandler::endElement', LOG_DEBUG);
                 // There are still pending submissions.
                 if (!$this->FinalAttempt) {
+                    add_log('Requeue this Done.xml file so that we can attempt to parse it again at a later date.', 'DoneHandler::endElement', LOG_DEBUG);
                     // Requeue this Done.xml file so that we can attempt to parse
                     // it again at a later date.
                     $this->Requeue = true;
@@ -60,9 +66,12 @@ class DoneHandler extends AbstractHandler
                 return;
             }
 
+            add_log('Update build ' . $this->Build->Id, 'DoneHandler::endElement', LOG_DEBUG);
             $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+            add_log('Mark build ' . $this->Build->Id . ' as done', 'DoneHandler::endElement', LOG_DEBUG);
             $this->Build->MarkAsDone(1);
             if ($this->PendingSubmissions->Exists()) {
+                add_log('Delete pending submission', 'DoneHandler::endElement', LOG_DEBUG);
                 $this->PendingSubmissions->Delete();
             }
             // TODO: notifications.

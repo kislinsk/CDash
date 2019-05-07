@@ -57,7 +57,6 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
 
     public function startElement($parser, $name, $attributes)
     {
-        add_log('PUSH ' . $name, 'AbstractHandler::startElement', LOG_DEBUG);
         $this->stack->push($name);
 
         if ($name == 'SUBPROJECT') {
@@ -67,7 +66,6 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
 
     public function endElement($parser, $name)
     {
-        add_log('POP ' . $name, 'AbstractHandler::endElement', LOG_DEBUG);
         $this->stack->pop();
     }
 
